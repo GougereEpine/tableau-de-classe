@@ -267,6 +267,24 @@ body.locked .w-bar, body.locked .w-resize { display: none; }
 }
 .wh-class:hover { opacity: 1; }
 
+/* Groups */
+.gr { position: absolute; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 2cqh; padding: 3cqh 3cqw; }
+.gr-top { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.gr-top .gr-class { position: static; max-width: 55%; }
+.gr-info { font-size: max(11px, 3.2cqh); opacity: .65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gr-grid { display: grid; gap: 1.6cqmin; min-height: 0; }
+.gr-card { border-radius: 10px; background: color-mix(in srgb, var(--gc) 13%, transparent); border: 2px solid color-mix(in srgb, var(--gc) 45%, transparent); padding: .35em .6em; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.gr-title { font-family: var(--font-display); font-weight: 600; color: var(--gc); font-size: .82em; text-transform: uppercase; letter-spacing: .06em; }
+.gr-names { font-family: var(--font-display); font-weight: 500; line-height: 1.18; }
+.gr-names div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gr-empty { grid-column: 1 / -1; display: grid; place-items: center; text-align: center; opacity: .6; font-size: max(13px, 4.5cqh); padding: 4cqh; }
+.gr-ctrl { display: flex; justify-content: center; }
+.gr-go { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; background: #1f2a44; color: #fff; padding: max(7px, 1.6cqh) max(16px, 4cqw); font-size: max(13px, 3.8cqh); font-weight: 500; }
+.gr-go span { display: grid; width: 1.15em; height: 1.15em; }
+.gr-go span svg { width: 100%; height: 100%; }
+.gr-go:disabled { opacity: .45; cursor: default; }
+.gr-absent { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 10px; }
+
 /* Phonemes */
 .ipa, .ph-sym { font-family: "Segoe UI", "Charis SIL", "Doulos SIL", "Lucida Grande", "Gentium Plus", "DejaVu Sans", system-ui, sans-serif; }
 .ph { position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; padding: 5cqmin; gap: 3cqmin; }
@@ -305,6 +323,18 @@ body.locked .w-bar, body.locked .w-resize { display: none; }
 #dock button:hover { background: var(--ui-soft); }
 #dock button.primary { background: var(--ui-accent); color: #fff; }
 #dock button.primary:hover { filter: brightness(1.08); background: var(--ui-accent); }
+#dock { transition: transform .25s ease, opacity .25s ease; }
+body.dock-hidden #dock { transform: translateX(-50%) translateY(calc(100% + 30px)); opacity: 0; pointer-events: none; }
+body.dock-hidden #board-inner { bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+#dock-handle {
+  position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 4px); transform: translateX(-50%); z-index: 100;
+  width: 46px; height: 22px; border: 0; border-radius: 999px; background: var(--ui-bg); color: var(--ui-fg); box-shadow: var(--ui-shadow);
+  display: none; place-items: center; opacity: .35; transition: opacity .2s;
+}
+#dock-handle:hover, #dock-handle:focus-visible { opacity: 1; }
+#dock-handle svg { width: 18px; height: 18px; }
+body.dock-hidden #dock-handle { display: grid; }
+#dock button:disabled { opacity: .35; cursor: default; background: transparent; }
 #dock button.on { background: var(--ui-soft); color: var(--ui-accent); }
 #dock svg { width: 18px; height: 18px; flex: none; }
 #board-name { max-width: 16ch; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
@@ -369,6 +399,12 @@ body.locked .w-bar, body.locked .w-resize { display: none; }
 .icon-pick { font-size: 20px; width: 42px; height: 42px; display: grid; place-items: center; padding: 0; border-radius: 10px; }
 .icon-pick svg { width: 30px; height: 20px; }
 
+.empty-board { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); width: min(460px, 100%); box-sizing: border-box; background: var(--ui-bg); color: var(--ui-fg); border-radius: 16px; box-shadow: var(--ui-shadow); padding: 24px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
+.empty-board h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 24px; }
+.empty-board p { margin: 0 0 6px; color: var(--ui-muted); line-height: 1.5; }
+.btn.primary { background: var(--ui-accent); color: #fff; border-color: var(--ui-accent); }
+@media (max-width: 720px) { .empty-board { position: static; transform: none; } }
+
 #reconnect { position: fixed; inset: 0; z-index: 140; background: rgba(20, 24, 36, .45); display: grid; place-items: center; padding: 16px; }
 .rc-card { background: var(--ui-bg); color: var(--ui-fg); border-radius: 16px; box-shadow: var(--ui-shadow); padding: 22px; max-width: 460px; display: flex; flex-direction: column; gap: 12px; }
 .rc-card h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 22px; }
@@ -406,6 +442,8 @@ body.locked .w-bar, body.locked .w-resize { display: none; }
 <nav id="dock" aria-label="Barre d'outils">
   <button class="primary" id="btn-add" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span class="lbl-hide">Widget</span></button>
   <div class="sep"></div>
+  <button id="btn-undo" aria-label="Annuler" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+  <div class="sep"></div>
   <button id="btn-prev" aria-label="Écran précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
   <button id="btn-boards" aria-haspopup="menu"><span id="board-name">Écran 1</span></button>
   <button id="btn-next" aria-label="Écran suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
@@ -414,7 +452,9 @@ body.locked .w-bar, body.locked .w-resize { display: none; }
   <button id="btn-lock" aria-pressed="false" aria-label="Verrouiller la disposition"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path id="lock-path" d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
   <button id="btn-full" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
   <div id="save-state" title=""><i></i><span>Chargement…</span></div>
+  <button id="btn-hide-dock" aria-label="Masquer la barre" title="Masquer la barre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
 </nav>
+<button id="dock-handle" aria-label="Afficher la barre d'outils" title="Afficher la barre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button>
 
 <aside id="drawer" aria-label="Réglages">
   <header><h2 id="drawer-title">Réglages</h2><button class="icon-btn" id="drawer-close" aria-label="Fermer" style="width:36px;height:36px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
@@ -469,6 +509,8 @@ const ICON = {
   wheel: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="13" r="8.5"/><path d="M12 13V4.5M12 13l7.4 4.2M12 13l-7.4 4.2"/><path d="M10 1.5h4L12 5Z" fill="currentColor"/></svg>`,
   phoneme: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4 3 12l2 8M19 4l2 8-2 8"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-1 .5-1 1.2-1 2.2M12 17.5h.01"/></svg>`,
   speaker: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4Z"/><path d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>`,
+  groups: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.3"/><circle cx="17" cy="7" r="2.3"/><circle cx="7" cy="16.5" r="2.3"/><circle cx="17" cy="16.5" r="2.3"/><path d="M3.5 12h7M13.5 12h7M12 3v18" stroke-dasharray="1 2.4"/></svg>`,
+  shuffle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3.5c3.5 0 4.5 10 8 10H21M3 17h3.5c1.4 0 2.4-1.6 3.3-3.5M14.5 7H21M18 4l3 3-3 3M18 14l3 3-3 3"/></svg>`,
   calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2" stroke-width="2.4"/></svg>`,
   text: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 6h14M5 11h14M5 16h9"/></svg>`,
   copy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>`,
@@ -569,6 +611,7 @@ function makeWidget(type, extra = {}) {
     teams: { color: "#f3cd2c", w: 40, h: 82, cfg: { teams: defaultTeams(6), max: 20, step: 1, icon: "rocket", crown: true, bar: true } },
     stopwatch: { color: "#c9c6f2", w: 23, h: 26, cfg: { hundredths: true }, rt: { elapsed: 0, startedAt: null } },
     clock: { color: "#8fe3b0", w: 14, h: 12, cfg: { mode: "12h", seconds: false, date: false } },
+    groups: { color: "#ffffff", w: 40, h: 56, cfg: { classId: null, mode: "size", size: 3, count: 4, absent: {}, result: null } },
     wheel: { color: "#ffffff", w: 28, h: 52, cfg: { classId: null, removeWinner: false, sound: true } },
     phonemes: { color: "#f7a8a0", w: 22, h: 40, cfg: { current: null, groups: ["sv", "lv", "di", "co"], autoExamples: false } },
     date: { color: "#9dd3f5", w: 24, h: 16, cfg: { quiz: true, question: "Date ?", locale: "uk", style: "long", weekday: true, year: true, ordinal: true, lines: 2 } },
@@ -578,15 +621,10 @@ function makeWidget(type, extra = {}) {
   }[type];
   return Object.assign(base, JSON.parse(JSON.stringify(D)), extra);
 }
+// A fresh board is empty: no sample widgets, no names. Everything comes from the teacher or her save file.
 function defaultState() {
-  const b = { id: uid(), name: "Écran 1", bg: { type: "cork", color: "#b98a5b" }, widgets: [] };
-  b.widgets.push(makeWidget("teams", { x: 0.5, y: 2, w: 40, h: 94, z: 1 }));
-  b.widgets.push(makeWidget("stopwatch", { x: 43, y: 3, w: 23.5, h: 26, z: 2 }));
-  b.widgets.push(makeWidget("text", { x: 69, y: 3, w: 30.5, h: 24, z: 3, cfg: { size: "s", align: "left", text: "• Good participation: +1 pt\n• All house participation: +5 pts\n• One name in the red book: −1 pt\n• Several names in the red book: −10 pts\n• One name in the green book: +2 pts\n• Several names in the green book: +10 pts" } }));
-  b.widgets.push(makeWidget("clock", { x: 47.5, y: 37, w: 14.5, h: 12, z: 4 }));
-  b.widgets.push(makeWidget("symbols", { x: 46.5, y: 54, w: 17, h: 37, z: 5 }));
-  b.widgets.push(makeWidget("timer", { x: 69, y: 35, w: 22, h: 59, z: 6 }));
-  return { v: 1, active: b.id, locked: false, boards: [b], classes: [{ id: uid(), name: "Classe 1", names: Array.from({ length: 15 }, (_, i) => `Élève ${i + 1}`), removed: [] }] };
+  const b = { id: uid(), name: "Écran 1", bg: { type: "cork", color: "#bf9161" }, widgets: [] };
+  return { v: 1, active: b.id, locked: false, boards: [b], classes: [{ id: uid(), name: "Classe 1", names: [], removed: [] }] };
 }
 
 const LS_KEY = "tableau-de-classe:v1";
@@ -599,6 +637,7 @@ const board = () => state.boards.find(b => b.id === state.active) || state.board
 function normalizeState() {
   if (!Array.isArray(state.classes)) state.classes = [];
   for (const b of state.boards) for (const w of b.widgets) {
+    if (w.type === "groups") { if (!w.cfg.classId || !state.classes.some(k => k.id === w.cfg.classId)) w.cfg.classId = state.classes[0] && state.classes[0].id; continue; }
     if (w.type !== "wheel") continue;
     if (w.cfg.classId && state.classes.some(k => k.id === w.cfg.classId)) continue;
     const names = (w.cfg.names || []).map(n => n.trim()).filter(Boolean);
@@ -613,6 +652,15 @@ function classFor(w) {
   if (!cls) { cls = state.classes[0] || (state.classes[0] = { id: uid(), name: "Classe 1", names: [], removed: [] }); w.cfg.classId = cls.id; }
   if (!Array.isArray(cls.removed)) cls.removed = [];
   return cls;
+}
+function openClassMenu(anchor, w) {
+  const c = w.cfg, cls = classFor(w);
+  openMenu(anchor, m => {
+    m.append(h("h4", {}, "Charger une classe"));
+    state.classes.forEach(k => m.append(h("button", { role: "menuitem", class: k.id === cls.id ? "cur" : "", onclick: () => { c.classId = k.id; wheelRot.delete(w.id); closeMenu(); commit(200); remount(w.id); if (drawerFor === w.id) renderDrawer(); } },
+      k.name, h("span", { style: "margin-left:auto;color:var(--ui-muted);font-size:12px" }, `${k.names.filter(n => n.trim()).length}`))));
+    m.append(h("hr"), h("button", { role: "menuitem", onclick: () => { const k = newClass(); c.classId = k.id; closeMenu(); commit(200); remount(w.id); if (w.type === "wheel") { openDrawer(w.id); setTimeout(() => { const i = $("#wh-class-name"); if (i) { i.focus(); i.select(); } }, 250); } else toast("Nouvelle classe créée : ajoute les prénoms dans les réglages de la roue"); } }, "+ Nouvelle classe"));
+  });
 }
 function newClass(name) { const cls = { id: uid(), name: name || `Classe ${state.classes.length + 1}`, names: [], removed: [] }; state.classes.push(cls); return cls; }
 const findW = id => board().widgets.find(w => w.id === id);
@@ -652,7 +700,38 @@ const getSynced = () => { try { return Number(localStorage.getItem(SYNC_KEY)) ||
 const setSynced = v => { try { localStorage.setItem(SYNC_KEY, String(v || 0)); } catch {} };
 function backupLocal() { try { localStorage.setItem(BACKUP_KEY, JSON.stringify({ at: Date.now(), state })); } catch {} }
 function saveLocal() { try { state.savedAt = Date.now(); localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch {} }
-function commit(delay = 500) {
+/* ---- Undo / redo ----
+   Each commit compares the board with the last committed version; if it changed, the previous version goes on the
+   undo stack. Repeated small changes (typing, a burst of + clicks) within 1.2 s collapse into one step;
+   adding, deleting or moving a widget is always its own step. Running timers
+   (rt) and the screen being shown are left out, so undo never restarts a timer or jumps to another screen. */
+const undoStack = [], redoStack = [];
+let lastSnap = null, lastPushAt = 0;
+const snap = () => JSON.stringify(state, (k, v) => (k === "rt" || k === "savedAt" || k === "active") ? undefined : v);
+function resetHistory() { undoStack.length = redoStack.length = 0; lastSnap = snap(); paintUndo(); }
+function recordHistory(burst) {
+  const now = snap();
+  if (lastSnap === null) { lastSnap = now; return; }
+  if (now === lastSnap) return;
+  const t = Date.now();
+  if (!burst || t - lastPushAt > 1200 || !undoStack.length) { undoStack.push(lastSnap); if (undoStack.length > 60) undoStack.shift(); }
+  lastPushAt = t; lastSnap = now; redoStack.length = 0; paintUndo();
+}
+function restoreSnap(json) {
+  const s = JSON.parse(json);
+  const rts = new Map(); state.boards.forEach(b => b.widgets.forEach(w => { if (w.rt) rts.set(w.id, w.rt); }));
+  s.boards.forEach(b => b.widgets.forEach(w => { if (rts.has(w.id)) w.rt = rts.get(w.id); else if (w.rt === undefined) { const d = makeWidget(w.type); if (d.rt) w.rt = d.rt; } }));
+  s.active = s.boards.some(b => b.id === state.active) ? state.active : s.boards[0].id;
+  s.savedAt = state.savedAt;
+  state = s; normalizeState(); lastSnap = snap(); lastPushAt = 0;
+  closeDrawer(); closeMenu(); renderAll(); commit(150, true); paintUndo();
+}
+function undo() { if (!undoStack.length) { toast("Rien à annuler"); return; } redoStack.push(snap()); restoreSnap(undoStack.pop()); toast("Annulé"); }
+function redo() { if (!redoStack.length) { toast("Rien à rétablir"); return; } undoStack.push(snap()); restoreSnap(redoStack.pop()); toast("Rétabli"); }
+function paintUndo() { const b = $("#btn-undo"); if (b) { b.disabled = !undoStack.length; b.title = undoStack.length ? "Annuler (Ctrl+Z)" : "Rien à annuler"; } }
+
+function commit(delay = 500, fromHistory = false) {
+  if (!fromHistory) recordHistory(delay >= 400); // slow-debounced commits (typing, + clicks) are bursts
   saveLocal();
   if (!fileHandle || filePerm !== "granted") return;
   pending = true; setSaveState("saving", "Enregistrement…");
@@ -688,7 +767,7 @@ function loadState(s) {
   state = s; if (!state.boards.some(b => b.id === state.active)) state.active = state.boards[0].id;
   normalizeState();
   try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch {}
-  closeDrawer(); renderAll();
+  closeDrawer(); renderAll(); resetHistory();
 }
 async function readHandle(hd) {
   const f = await hd.getFile(); const txt = await f.text();
@@ -811,10 +890,21 @@ function renderBoardBg() {
   document.body.classList.toggle("pins", fix === "pins"); document.body.classList.toggle("magnets", fix === "magnets");
   el.classList.toggle("wb-frame", b.bg.type === "whiteboard");
 }
+function emptyBoard() {
+  const first = state.boards.length === 1 && !state.classes.some(k => k.names.some(n => n.trim()));
+  return h("div", { class: "empty-board" },
+    h("h2", {}, first ? "Tableau vide" : "Écran vide"),
+    h("p", {}, first ? "Ajoute des widgets avec « + Widget », ou reprends ta sauvegarde si tu en as une." : "Ajoute des widgets avec « + Widget »."),
+    h("div", { class: "row", style: "justify-content:center" },
+      h("button", { class: "btn primary", onclick: () => $("#btn-add").click() }, "+ Ajouter un widget"),
+      first && FS_OK ? h("button", { class: "btn", onclick: openExistingFile }, "Ouvrir ma sauvegarde…") : null,
+      first ? h("button", { class: "btn", onclick: importCopy }, "Importer une copie…") : null));
+}
 function renderAll() {
   renderBoardBg();
   boardInner.replaceChildren(); mounted.clear();
   for (const w of board().widgets) mountWidget(w);
+  if (!board().widgets.length) boardInner.append(emptyBoard());
   $("#board-name").textContent = board().name;
   document.body.classList.toggle("locked", !!state.locked);
   $("#btn-lock").classList.toggle("on", !!state.locked);
@@ -866,6 +956,7 @@ function removeWidget(id) {
   const b = board(); b.widgets = b.widgets.filter(w => w.id !== id);
   const m = mounted.get(id); if (m) m.el.remove(); mounted.delete(id);
   if (drawerFor === id) closeDrawer();
+  if (!b.widgets.length) boardInner.append(emptyBoard());
   commit(100);
 }
 function toFront(w) {
@@ -1178,6 +1269,73 @@ const WIDGETS = {
     },
   },
 
+  /* ---- Random groups (from a class list) ---- */
+  groups: {
+    name: "Générateur de groupes", icon: "groups",
+    mount(body, w) {
+      const c = w.cfg, cls = classFor(w);
+      const absent = new Set((c.absent || {})[cls.id] || []);
+      const present = cls.names.map(n => n.trim()).filter(n => n && !absent.has(n));
+      const groups = (c.result && c.result.classId === cls.id) ? c.result.groups : null;
+      const n = groups ? groups.length : 0;
+      // Grid shape follows the widget's proportions (board is roughly 16:9)
+      const ratio = (w.w * 16) / Math.max(1, w.h * 9);
+      const cols = n ? Math.max(1, Math.min(n, Math.round(Math.sqrt(n * ratio)))) : 1, rows = n ? Math.ceil(n / cols) : 1;
+      const maxM = groups ? Math.max(1, ...groups.map(g => g.length)) : 1;
+      const fs = `min(${(80 / rows / (maxM + 1.1)).toFixed(2)}cqh, ${(90 / cols / 7).toFixed(2)}cqw)`;
+      const grid = h("div", { class: "gr-grid", style: `grid-template-columns: repeat(${cols}, minmax(0, 1fr)); grid-template-rows: repeat(${rows}, minmax(0, 1fr)); font-size: ${fs}` });
+      if (groups) groups.forEach((g, i) => grid.append(h("div", { class: "gr-card", style: `--gc: hsl(${(i * 360 / n + 200) % 360} 65% ${((i * 360 / n + 200) % 360 > 35 && (i * 360 / n + 200) % 360 < 75) ? 34 : 44}%)` },
+        h("div", { class: "gr-title" }, `Groupe ${i + 1}`), h("div", { class: "gr-names" }, g.map(name => h("div", {}, name))))));
+      else grid.append(h("div", { class: "gr-empty" }, present.length ? `${present.length} élèves présents : clique sur « Faire les groupes »` : "Ajoute des prénoms à la classe dans les réglages"));
+      const go = h("button", { class: "gr-go", disabled: present.length < 2 }, h("span", { html: ICON.shuffle }), groups ? "Refaire" : "Faire les groupes");
+      const size = c.mode === "count" ? `${c.count} groupes` : `par ${c.size}`;
+      const pill = h("button", { class: "wh-class gr-class", "aria-haspopup": "menu", title: "Changer de classe" }, cls.name, h("span", { "aria-hidden": "true" }, " ▾"));
+      pill.addEventListener("click", e => { e.stopPropagation(); openClassMenu(pill, w); });
+      body.append(h("div", { class: "gr" }, h("div", { class: "gr-top" }, pill, h("span", { class: "gr-info" }, `${present.length} élèves · ${size}`)), grid, h("div", { class: "gr-ctrl" }, go)));
+      go.addEventListener("click", () => {
+        const list = [...present];
+        for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; }
+        const k = Math.max(1, Math.min(list.length, c.mode === "count" ? c.count : Math.round(list.length / c.size) || 1));
+        const out = Array.from({ length: k }, () => []);
+        list.forEach((name, i) => out[i % k].push(name)); // sizes differ by at most one
+        // short shuffle animation, then the real result
+        let t = 0; go.disabled = true;
+        const flick = setInterval(() => {
+          grid.querySelectorAll(".gr-names div").forEach(d => { d.textContent = present[Math.floor(Math.random() * present.length)]; });
+          if (++t > 8) { clearInterval(flick); c.result = { classId: cls.id, groups: out }; commit(200); remount(w.id); }
+        }, 60);
+        if (!grid.querySelector(".gr-names")) { clearInterval(flick); c.result = { classId: cls.id, groups: out }; commit(200); remount(w.id); }
+      });
+    },
+    settings(w, panel) {
+      const c = w.cfg, cls = classFor(w);
+      c.absent = c.absent || {}; const absent = new Set(c.absent[cls.id] || []);
+      const names = cls.names.map(n => n.trim()).filter(Boolean);
+      const teamsW = board().widgets.filter(x => x.type === "teams");
+      const groups = (c.result && c.result.classId === cls.id) ? c.result.groups : null;
+      panel.append(
+        field("Classe", h("div", { class: "row" }, state.classes.map(k => h("button", { class: "chip" + (k.id === cls.id ? " cur" : ""), onclick: () => { c.classId = k.id; update(true); } }, k.name)))),
+        h("p", { class: "hint" }, "Les listes de classes sont les mêmes que celles de la roue des prénoms : on les crée et on les modifie dans les réglages de la roue (ou ici avec « + Nouvelle classe » sur le widget)."),
+        field("Faire", h("div", { class: "row" },
+          h("button", { class: "chip" + (c.mode !== "count" ? " cur" : ""), onclick: () => { c.mode = "size"; update(true); } }, "Des groupes de…"),
+          h("button", { class: "chip" + (c.mode === "count" ? " cur" : ""), onclick: () => { c.mode = "count"; update(true); } }, "Un nombre de groupes"))),
+        c.mode === "count"
+          ? field("Nombre de groupes", h("div", { class: "row" }, [2, 3, 4, 5, 6, 7, 8].map(v => h("button", { class: "chip" + (c.count === v ? " cur" : ""), onclick: () => { c.count = v; update(true); } }, String(v)))))
+          : field("Élèves par groupe", h("div", { class: "row" }, [2, 3, 4, 5, 6].map(v => h("button", { class: "chip" + (c.size === v ? " cur" : ""), onclick: () => { c.size = v; update(true); } }, String(v))))),
+        names.length ? field(`Absents aujourd'hui (${absent.size})`, h("div", { class: "gr-absent" }, names.map((nm, i) => h("label", { class: "check", style: "font-size:13px" },
+          h("input", { type: "checkbox", id: `gr-abs-${i}`, checked: absent.has(nm), onchange: e => { if (e.target.checked) absent.add(nm); else absent.delete(nm); c.absent[cls.id] = [...absent]; update(); } }), nm)))) : null,
+        absent.size ? h("button", { class: "btn", onclick: () => { c.absent[cls.id] = []; update(true); } }, "Tout le monde est présent") : null,
+        groups && teamsW.length ? field("Utiliser ces groupes comme équipes", h("div", { style: "display:flex;flex-direction:column;gap:6px" },
+          h("p", { class: "hint" }, `Le widget Équipes prend ${groups.length} équipes nommées avec les prénoms de chaque groupe. Les scores repartent à 0 (Ctrl+Z pour annuler).`),
+          confirmBtn("Remplir le widget Équipes", () => {
+            const t = teamsW[0];
+            t.cfg.teams = groups.map((g, i) => ({ name: g.join(", "), color: (t.cfg.teams[i] && t.cfg.teams[i].color) || null, score: 0 }));
+            commit(100); remount(t.id); toast("Équipes remplies avec les groupes");
+          }))) : null
+      );
+    },
+  },
+
   /* ---- Wheel of names ---- */
   wheel: {
     name: "Roue des prénoms", icon: "wheel",
@@ -1193,12 +1351,7 @@ const WIDGETS = {
       const stage = h("div", { class: "wh-stage", tabindex: "0", "aria-label": "Roue des prénoms : Entrée pour lancer" }, canvas, pointer, btn);
       // Class switcher on the wheel itself
       const pick = h("button", { class: "wh-class", "aria-haspopup": "menu", title: "Changer de classe" }, cls.name, h("span", { "aria-hidden": "true" }, " ▾"));
-      pick.addEventListener("click", e => { e.stopPropagation(); openMenu(pick, m => {
-        m.append(h("h4", {}, "Charger une classe"));
-        state.classes.forEach(k => m.append(h("button", { role: "menuitem", class: k.id === cls.id ? "cur" : "", onclick: () => { c.classId = k.id; wheelRot.delete(w.id); closeMenu(); commit(200); remount(w.id); if (drawerFor === w.id) renderDrawer(); } },
-          k.name, h("span", { style: "margin-left:auto;color:var(--ui-muted);font-size:12px" }, `${k.names.filter(n => n.trim()).length}`))));
-        m.append(h("hr"), h("button", { role: "menuitem", onclick: () => { const k = newClass(); c.classId = k.id; closeMenu(); commit(200); remount(w.id); openDrawer(w.id); setTimeout(() => { const i = $("#wh-class-name"); if (i) { i.focus(); i.select(); } }, 250); } }, "+ Nouvelle classe"));
-      }); });
+      pick.addEventListener("click", e => { e.stopPropagation(); openClassMenu(pick, w); });
       body.append(h("div", { class: "wh" }, stage, result), pick);
       if (!names.length) {
         btn.hidden = true;
@@ -1568,11 +1721,19 @@ function renderBgPanel(panel) {
       h("button", { class: "btn", onclick: () => { const copy = JSON.parse(JSON.stringify(b)); copy.id = uid(); copy.name = b.name + " (copie)"; copy.widgets.forEach(w => w.id = uid()); state.boards.push(copy); state.active = copy.id; renderAll(); openDrawer("__bg"); commit(200); toast("Écran dupliqué"); } }, "Dupliquer l'écran"),
       state.boards.length > 1 ? confirmBtn("Supprimer l'écran", () => { const i = state.boards.indexOf(b); state.boards.splice(i, 1); state.active = state.boards[Math.max(0, i - 1)].id; closeDrawer(); renderAll(); commit(200); }) : null),
     savePanel(),
-    confirmBtn("Réinitialiser tout (exemple de départ)", () => { state = defaultState(); closeDrawer(); renderAll(); commit(100); toast("Tableau réinitialisé"); })
+    confirmBtn("Tout effacer (tableau vide)", () => { state = defaultState(); closeDrawer(); renderAll(); commit(100); toast("Tableau effacalisé"); })
   );
 }
 $("#drawer-close").onclick = closeDrawer;
-document.addEventListener("keydown", e => { if (e.key === "Escape") { closeDrawer(); closeMenu(); } });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { closeDrawer(); closeMenu(); return; }
+  // Ctrl+Z / Cmd+Z, Ctrl+Shift+Z / Ctrl+Y; text fields keep their own undo
+  const a = document.activeElement, typing = a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+  if (typing || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
+  else if ((k === "z" && e.shiftKey) || k === "y") { e.preventDefault(); redo(); }
+});
 
 /* ================= Menus & dock ================= */
 let menuEl = null;
@@ -1593,7 +1754,7 @@ $("#btn-add").onclick = e => openMenu(e.currentTarget, m => {
       const w = makeWidget(type); const b = board();
       const n = b.widgets.length; w.x = clamp(30 + (n % 5) * 3, 0, 100 - w.w); w.y = clamp(20 + (n % 5) * 3, 0, 100 - w.h);
       w.z = Math.max(0, ...b.widgets.map(x => x.z || 0)) + 1;
-      b.widgets.push(w); mountWidget(w); commit(200); closeMenu(); openDrawer(w.id);
+      b.widgets.push(w); boardInner.querySelector(".empty-board")?.remove(); mountWidget(w); commit(200); closeMenu(); openDrawer(w.id);
     } }, h("span", { class: "mi", style: `background:${sample.color};color:${fgFor(sample.color)}`, html: ICON[def.icon] }), def.name));
   }
 });
@@ -1607,6 +1768,16 @@ $("#btn-boards").onclick = e => openMenu(e.currentTarget, m => {
 });
 const step = d => { const i = state.boards.findIndex(b => b.id === state.active); const n = state.boards.length; if (n < 2) { toast("Un seul écran pour l'instant"); return; } state.active = state.boards[(i + d + n) % n].id; closeDrawer(); renderAll(); commit(300); };
 $("#btn-prev").onclick = () => step(-1);
+$("#btn-undo").onclick = undo;
+// The toolbar can be tucked away during class; it is a per-computer preference, not part of the board.
+function setDockHidden(v) {
+  document.body.classList.toggle("dock-hidden", v);
+  try { localStorage.setItem("tableau-de-classe:dock-hidden", v ? "1" : ""); } catch {}
+  closeMenu();
+}
+$("#btn-hide-dock").onclick = () => { setDockHidden(true); toast("Barre masquée : petite poignée en bas pour la retrouver"); };
+$("#dock-handle").onclick = () => setDockHidden(false);
+try { if (localStorage.getItem("tableau-de-classe:dock-hidden")) document.body.classList.add("dock-hidden"); } catch {}
 $("#btn-next").onclick = () => step(1);
 $("#btn-bg").onclick = () => { if (drawerFor === "__bg") closeDrawer(); else openDrawer("__bg"); };
 $("#btn-lock").onclick = () => { state.locked = !state.locked; renderAll(); commit(300); toast(state.locked ? "Disposition verrouillée" : "Disposition déverrouillée"); };
@@ -1621,7 +1792,7 @@ document.addEventListener("pointerdown", function wl() { document.removeEventLis
 
 /* ================= Loop & boot ================= */
 function loop() { mounted.forEach(m => { if (m.tick) m.tick(); }); requestAnimationFrame(loop); }
-renderAll(); loop();
+renderAll(); loop(); resetHistory();
 connectCloud();
 })();
 </script>

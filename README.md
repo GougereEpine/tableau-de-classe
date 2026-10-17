@@ -1,6 +1,6 @@
 # Tableau de classe
 
-Tableau interactif pour la classe, dans l'esprit de classroomscreen : équipes et points, chronomètre, minuteur à cadran, heure et date en anglais, consignes de travail, roue des prénoms, phonèmes anglais (UK), zones de texte.
+Tableau interactif pour la classe, dans l'esprit de classroomscreen : équipes et points, chronomètre, minuteur à cadran, heure et date en anglais, consignes de travail, roue des prénoms, générateur de groupes, phonèmes anglais (UK), zones de texte. Ctrl+Z pour annuler.
 
 **Ouvrir l'app : https://gougereepine.github.io/tableau-de-classe/**
 
